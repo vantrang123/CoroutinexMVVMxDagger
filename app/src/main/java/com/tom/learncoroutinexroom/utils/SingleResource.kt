@@ -6,12 +6,20 @@ import com.tom.learncoroutinexroom.common.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 
-fun <L, R> resultLiveData(
-    networkCall: suspend () -> kotlin.Result<R>,
-    saveCallResult: suspend (R) -> Unit,
+fun <R> resultLiveData(
+    networkCall: suspend () -> Result<R>,
     io: CoroutineDispatcher
-): LiveData<Result<L>> =
+): LiveData<Result<R>> =
     liveData(io) {
-        emit(Result.loading<L>())
+        emit(Result.loading<R>())
         delay(1_500)
+
+        val responseStatus = networkCall.invoke()
+        if (responseStatus.status == Result.Status.SUCCESS) {
+            responseStatus.data?.let { }
+        } else if (responseStatus.status == Result.Status.ERROR) {
+            if (responseStatus.message != null) {
+                emit(Result.error<R>(responseStatus.message))
+            }
+        }
     }

@@ -2,6 +2,8 @@ package com.tom.learncoroutinexroom.di.module
 
 import android.content.Context
 import com.tom.learncoroutinexroom.Application
+import com.tom.learncoroutinexroom.data.PlayerRepository
+import com.tom.learncoroutinexroom.data.remote.PlayerRemoteDataSource
 import com.tom.learncoroutinexroom.data.remote.Service
 import dagger.Module
 import dagger.Provides
@@ -37,4 +39,13 @@ class AppModule {
     @Named("MAIN")
     fun provideMainDispatchers(): CoroutineDispatcher =
         Dispatchers.Main
+
+    @Provides
+    @Singleton
+    fun provideRemoteDataSource(apiService: Service) = PlayerRemoteDataSource(apiService)
+
+    @Provides
+    @Singleton
+    fun providePlayerRepository(remote: PlayerRemoteDataSource) =
+        PlayerRepository(remote)
 }

@@ -1,7 +1,6 @@
 package com.tom.learncoroutinexroom.base
 
 import android.view.ViewGroup
-import android.view.ViewParent
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
