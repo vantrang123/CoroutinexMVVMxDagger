@@ -1,5 +1,7 @@
 package com.tom.learncoroutinexroom.data
 
+import androidx.lifecycle.LiveData
+import com.tom.learncoroutinexroom.data.model.Player
 import com.tom.learncoroutinexroom.data.remote.PlayerRemoteDataSource
 import com.tom.learncoroutinexroom.utils.resultLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -10,11 +12,11 @@ import javax.inject.Singleton
 
 @Singleton
 class PlayerRepository @Inject constructor(
-    private val remote: PlayerRemoteDataSource,
-    @Named("IO") private val io: CoroutineDispatcher = IO
+        private val remote: PlayerRemoteDataSource,
+        @Named("IO") private val io: CoroutineDispatcher = IO
 ) {
     fun observePlayer() = resultLiveData(
-        networkCall = { remote.getAllPlayers() },
-        io = io
+            networkCall = { remote.getAllPlayers() },
+            io = io
     )
 }

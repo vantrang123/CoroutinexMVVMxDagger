@@ -2,24 +2,28 @@ package com.tom.learncoroutinexroom.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.lifecycle.map
 import com.tom.learncoroutinexroom.common.Result
+import com.tom.learncoroutinexroom.data.model.Player
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 
 fun <R> resultLiveData(
-    networkCall: suspend () -> Result<R>,
-    io: CoroutineDispatcher
+        networkCall: suspend () -> Result<R>,
+        io: CoroutineDispatcher
 ): LiveData<Result<R>> =
-    liveData(io) {
-        emit(Result.loading<R>())
-        delay(1_500)
+        liveData(io) {
+            emit(Result.loading<R>())
+            delay(1_500)
 
-        val responseStatus = networkCall.invoke()
-        if (responseStatus.status == Result.Status.SUCCESS) {
-            responseStatus.data?.let { }
-        } else if (responseStatus.status == Result.Status.ERROR) {
-            if (responseStatus.message != null) {
-                emit(Result.error<R>(responseStatus.message))
+            val responseStatus = networkCall.invoke()
+            if (responseStatus.status == Result.Status.SUCCESS) {
+                responseStatus.data?.let {
+                    emit(Result.success(it))
+                }
+            } else if (responseStatus.status == Result.Status.ERROR) {
+                if (responseStatus.message != null) {
+                    emit(Result.error<R>(responseStatus.message))
+                }
             }
         }
-    }

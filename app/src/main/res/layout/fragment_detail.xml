@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="player"
+            type="com.tom.learncoroutinexroom.data.model.Player" />
+        <variable
+            name="image"
+            type="String" />
+    </data>
+</layout>
