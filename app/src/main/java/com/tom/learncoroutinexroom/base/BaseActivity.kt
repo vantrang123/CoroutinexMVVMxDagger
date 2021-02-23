@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.tom.learncoroutinexroom.R
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
@@ -34,5 +35,9 @@ abstract class BaseActivity<B : ViewDataBinding, V: ViewModel> : DaggerAppCompat
         injectViewModel()
         mViewDataBinding = DataBindingUtil.setContentView(this, getLayoutResourceId())
         initView()
+    }
+
+    protected fun snackBar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 }

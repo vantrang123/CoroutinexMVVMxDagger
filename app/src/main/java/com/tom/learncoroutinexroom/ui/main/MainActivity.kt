@@ -1,5 +1,6 @@
 package com.tom.learncoroutinexroom.ui.main
 
+import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,11 +11,17 @@ import com.tom.learncoroutinexroom.common.Result
 import com.tom.learncoroutinexroom.data.model.Player
 import com.tom.learncoroutinexroom.databinding.ActivityMainBinding
 import com.tom.learncoroutinexroom.di.injectViewModel
+import com.tom.learncoroutinexroom.extensions.visible
 import com.tom.learncoroutinexroom.ui.MainAdapter
+import com.tom.learncoroutinexroom.ui.detail.DetailDialogFragment
+import javax.inject.Inject
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     private lateinit var adapter: MainAdapter
+
+    @Inject
+    lateinit var detailFragment: DetailDialogFragment
 
     override fun injectViewModel() {
         mViewModel = injectViewModel(viewModelFactory)
@@ -43,20 +50,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     if (result.data != null) {
                         adapter.setPlayerList(result.data)
                     }
-                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.recyclerView.visible()
                 }
 
                 Result.Status.ERROR -> {
-                    result.message?.let {
-                        Snackbar.make(
-                            binding.recyclerView,
-                            it,
-                            Snackbar.LENGTH_LONG
-                        ).show()
-                    }
-                    binding.recyclerView.visibility = View.VISIBLE
+                    result.message?.let { message -> snackBar(message) }
+                    binding.recyclerView.visible()
                 }
-
                 Result.Status.LOADING -> {
                 }
             }
@@ -66,5 +66,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun getLayoutResourceId(): Int = R.layout.activity_main
 
     private fun onItemClicked(player: Player) {
+        val args = Bundle().apply {
+            putString(DetailDialogFragment.ID_PLAYER, player._ID.toString())
+        }
+        detailFragment.arguments = args
+        detailFragment.show(supportFragmentManager, "DetailDialogFragment")
     }
 }

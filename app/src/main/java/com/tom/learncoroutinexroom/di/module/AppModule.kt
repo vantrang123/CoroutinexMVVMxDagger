@@ -3,10 +3,13 @@ package com.tom.learncoroutinexroom.di.module
 import android.content.Context
 import com.tom.learncoroutinexroom.Application
 import com.tom.learncoroutinexroom.data.PlayerRepository
+import com.tom.learncoroutinexroom.data.local.DbService
 import com.tom.learncoroutinexroom.data.remote.PlayerRemoteDataSource
 import com.tom.learncoroutinexroom.data.remote.Service
+import com.tom.learncoroutinexroom.ui.detail.DetailDialogFragment
 import dagger.Module
 import dagger.Provides
+import io.realm.Realm
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
@@ -46,6 +49,22 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providePlayerRepository(remote: PlayerRemoteDataSource) =
-        PlayerRepository(remote)
+    fun provideDbService() = DbService()
+
+    @Provides
+    @Singleton
+    fun provideRealm() = Realm.getDefaultInstance()
+
+    @Provides
+    @Singleton
+    fun provideDetailDialogFragment(): DetailDialogFragment = DetailDialogFragment()
+
+    @Provides
+    @Singleton
+    fun providePlayerRepository(
+        remote: PlayerRemoteDataSource,
+        dbService: DbService,
+        realm: Realm,
+    ) =
+        PlayerRepository(remote = remote, dbService = dbService, realm = realm)
 }

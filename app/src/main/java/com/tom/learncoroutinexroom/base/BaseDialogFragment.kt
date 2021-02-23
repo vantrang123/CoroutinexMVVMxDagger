@@ -4,18 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import dagger.android.support.DaggerFragment
+import com.tom.learncoroutinexroom.R
+import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
-abstract class BaseFragment<B : ViewDataBinding, V: ViewModel> : DaggerFragment() {
-
+abstract class BaseDialogFragment<B : ViewDataBinding, V : ViewModel> : DaggerDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -32,7 +31,18 @@ abstract class BaseFragment<B : ViewDataBinding, V: ViewModel> : DaggerFragment(
     abstract fun getLayoutResourceId(): Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setStyle(STYLE_NORMAL, R.style.AppTheme_Fragment)
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        dialog?.window?.attributes?.windowAnimations = R.style.AppTheme_Fragment
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
     }
 
     override fun onCreateView(
@@ -48,17 +58,8 @@ abstract class BaseFragment<B : ViewDataBinding, V: ViewModel> : DaggerFragment(
         return mViewDataBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-    }
-
     protected fun snackBar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
-    }
-
-    protected fun toast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     open fun initView() {}

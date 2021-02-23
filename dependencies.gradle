@@ -45,7 +45,7 @@ ext {
     daggerProcessor = "com.google.dagger:dagger-android-processor:$dagger_version"
     daggerCompiler = "com.google.dagger:dagger-compiler:$dagger_version"
 
-    // timbre
+    // timber
     timber = "com.jakewharton.timber:timber:$timber_version"
 
     // picasso

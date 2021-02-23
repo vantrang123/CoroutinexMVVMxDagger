@@ -32,7 +32,7 @@ class MainAdapter(val listener: Listener) : RecyclerView.Adapter<MainAdapter.Pla
         fun bind(item: Player) = binding.apply {
             player = item
             image = item.imageUrl
-            val icon = if (item.isFavorite) {
+            val icon = if (item.isFavorite == true) {
                 R.drawable.ic_star
             } else {
                 R.drawable.ic_star_border

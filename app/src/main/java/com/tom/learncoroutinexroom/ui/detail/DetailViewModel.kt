@@ -16,20 +16,27 @@ class DetailViewModel @Inject constructor(
         @Named("IO") private val io: CoroutineDispatcher,
         @Named("MAIN") private val main: CoroutineDispatcher
 ) : ViewModel() {
-    private val _player = MutableLiveData<Result<Player>>()
-    val player: LiveData<Result<Player>> get() = _player
+    private val _player = MutableLiveData<Result<Player?>>()
+    val player: LiveData<Result<Player?>> get() = _player
 
-    private fun setResultPlayer(result: Result<Player>) {
-        _player.postValue(result)
+    private fun setResultPlayer(result: Result<Player?>) {
+        result.data?.let {
+            _player.postValue(result)
+        }
     }
 
-    private fun observePlayerByUUID(id: String) {
+    internal fun observePlayerByUUID(id: String) {
         viewModelScope.launch(main) {
             try {
                 setResultPlayer(Result.loading())
                 delay(1_500)
-                val result = async(context = io) {}
-            } catch (e: Throwable) {}
+                val result = async(context = io) {
+                    repository.observePlayerByUUID(id = id)
+                }
+                setResultPlayer(Result.success(result.await()))
+            } catch (e: Throwable) {
+                setResultPlayer(Result.error(e.message ?: "Unknown error"))
+            }
         }
     }
 

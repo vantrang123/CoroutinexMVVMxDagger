@@ -1,10 +1,7 @@
 package com.tom.learncoroutinexroom.di.component
 
 import com.tom.learncoroutinexroom.Application
-import com.tom.learncoroutinexroom.di.module.ActivityBuilder
-import com.tom.learncoroutinexroom.di.module.AppModule
-import com.tom.learncoroutinexroom.di.module.NetworkModule
-import com.tom.learncoroutinexroom.di.module.ViewModelModule
+import com.tom.learncoroutinexroom.di.module.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -18,7 +15,8 @@ import javax.inject.Singleton
         ActivityBuilder::class,
         ViewModelModule::class,
         NetworkModule::class,
-        AppModule::class
+        AppModule::class,
+        FragmentDialogModule::class
     ]
 )
 interface AppComponent : AndroidInjector<Application> {

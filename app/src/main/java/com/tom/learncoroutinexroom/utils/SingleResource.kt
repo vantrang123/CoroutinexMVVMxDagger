@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 
 fun <R> resultLiveData(
         networkCall: suspend () -> Result<R>,
+        saveCallResult: suspend (R) -> Unit,
         io: CoroutineDispatcher
 ): LiveData<Result<R>> =
         liveData(io) {
@@ -19,6 +20,7 @@ fun <R> resultLiveData(
             val responseStatus = networkCall.invoke()
             if (responseStatus.status == Result.Status.SUCCESS) {
                 responseStatus.data?.let {
+                    saveCallResult(it)
                     emit(Result.success(it))
                 }
             } else if (responseStatus.status == Result.Status.ERROR) {
