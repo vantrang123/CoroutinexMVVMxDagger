@@ -35,30 +35,8 @@ class DetailDialogFragment : BaseDialogFragment<FragmentDetailBinding, DetailVie
     override fun initViewModel() {
         super.initViewModel()
         viewModel.apply {
-            loading.observe(viewLifecycleOwner, Observer {
-                when(it.status) {
-                    Result.Status.LOADING -> {
-                        showLoadingDialog()
-                    }
-                    Result.Status.DISMISS -> {
-                        dismissLoadingDialog()
-                    }
-                }
-            })
-            error.observe(viewLifecycleOwner, Observer {
-                when(it.status) {
-                    Result.Status.ERROR -> {
-                        it.message?.let { message -> snackBar(message) }
-                        dismissLoadingDialog()
-                    }
-                }
-            })
             player.observe(viewLifecycleOwner, Observer {
-                when(it.status) {
-                    Result.Status.SUCCESS -> {
-                        it.data?.let { player ->  displayPlayer(player) }
-                    }
-                }
+                it?.let { player ->  displayPlayer(player) }
             })
         }
     }

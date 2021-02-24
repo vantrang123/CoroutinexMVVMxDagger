@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -15,7 +16,7 @@ import com.tom.learncoroutinexroom.ui.utils.LoadingProgress
 import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
-abstract class BaseDialogFragment<B : ViewDataBinding, V : ViewModel> : DaggerDialogFragment() {
+abstract class BaseDialogFragment<B : ViewDataBinding, V : BaseViewModel> : DaggerDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -60,12 +61,27 @@ abstract class BaseDialogFragment<B : ViewDataBinding, V : ViewModel> : DaggerDi
         return mViewDataBinding.root
     }
 
-    protected fun snackBar(message: String) {
+    private fun snackBar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 
     open fun initView() {}
-    open fun initViewModel() {}
+    open fun initViewModel() {
+        viewModel.apply {
+            error.observe(viewLifecycleOwner, Observer {
+                snackBar(it.message)
+            })
+
+            isLoading.observe(viewLifecycleOwner, Observer {
+                if (it) {
+                    showLoadingDialog()
+                } else {
+                    dismissLoadingDialog()
+                }
+            })
+        }
+    }
+
     open fun showLoadingDialog() {
         if (loadingProgress == null) {
             loadingProgress = LoadingProgress(requireContext())
