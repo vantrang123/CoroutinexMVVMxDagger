@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.tom.learncoroutinexroom.R
+import com.tom.learncoroutinexroom.ui.utils.LoadingProgress
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -17,6 +18,7 @@ abstract class BaseActivity<B : ViewDataBinding, V: ViewModel> : DaggerAppCompat
 
     private lateinit var mViewDataBinding: B
     protected lateinit var mViewModel: V
+    private var loadingProgress: LoadingProgress? = null
 
     val binding: B get() = mViewDataBinding
     val viewModel: V get() = mViewModel
@@ -39,5 +41,26 @@ abstract class BaseActivity<B : ViewDataBinding, V: ViewModel> : DaggerAppCompat
 
     protected fun snackBar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
+    }
+    open fun showLoadingDialog() {
+        if (loadingProgress == null) {
+            loadingProgress = LoadingProgress(this)
+        }
+        loadingProgress?.let {
+            if (!it.isShowing) {
+                it.show()
+            }
+        }
+    }
+
+    open fun dismissLoadingDialog() {
+        try {
+            loadingProgress?.let {
+                it.dismiss()
+                loadingProgress = null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

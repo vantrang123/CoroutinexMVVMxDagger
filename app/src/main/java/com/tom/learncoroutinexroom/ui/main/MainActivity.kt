@@ -45,19 +45,21 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private fun observeUi() {
         viewModel.player.observe(this, Observer { result ->
             when (result.status) {
-
                 Result.Status.SUCCESS -> {
                     if (result.data != null) {
                         adapter.setPlayerList(result.data)
                     }
                     binding.recyclerView.visible()
+                    dismissLoadingDialog()
                 }
 
                 Result.Status.ERROR -> {
                     result.message?.let { message -> snackBar(message) }
                     binding.recyclerView.visible()
+                    dismissLoadingDialog()
                 }
                 Result.Status.LOADING -> {
+                    showLoadingDialog()
                 }
             }
         })
@@ -67,7 +69,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     private fun onItemClicked(player: Player) {
         val args = Bundle().apply {
-            putString(DetailDialogFragment.ID_PLAYER, player._ID.toString())
+            putString(DetailDialogFragment.ID_PLAYER, player.id.toString())
         }
         detailFragment.arguments = args
         detailFragment.show(supportFragmentManager, "DetailDialogFragment")

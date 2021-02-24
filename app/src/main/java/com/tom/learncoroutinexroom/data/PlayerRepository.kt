@@ -21,9 +21,9 @@ class PlayerRepository @Inject constructor(
 ) {
     fun observePlayer() = resultLiveData(
         networkCall = { remote.getAllPlayers() },
-        saveCallResult = { dbService.saveAll(realm = realm, it) },
+        saveCallResult = { dbService.saveAll(it) },
         io = io
     )
 
-    suspend fun observePlayerByUUID(id: String) = dbService.getPlayer(realm = realm, playerId = id)
+    suspend fun observePlayerByUUID(id: String) = dbService.getPlayer(playerId = id)
 }

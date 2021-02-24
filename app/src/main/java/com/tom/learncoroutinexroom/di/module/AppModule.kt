@@ -52,8 +52,7 @@ class AppModule {
     fun provideDbService() = DbService()
 
     @Provides
-    @Singleton
-    fun provideRealm() = Realm.getDefaultInstance()
+    fun provideRealm() = Realm.getDefaultInstance()!!
 
     @Provides
     @Singleton

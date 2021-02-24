@@ -8,6 +8,8 @@ import com.tom.learncoroutinexroom.common.Result
 import com.tom.learncoroutinexroom.data.model.Player
 import com.tom.learncoroutinexroom.databinding.FragmentDetailBinding
 import com.tom.learncoroutinexroom.di.injectViewModel
+import com.tom.learncoroutinexroom.extensions.gone
+import com.tom.learncoroutinexroom.extensions.visible
 
 class DetailDialogFragment : BaseDialogFragment<FragmentDetailBinding, DetailViewModel>(){
     override fun injectViewModel() {
@@ -27,18 +29,35 @@ class DetailDialogFragment : BaseDialogFragment<FragmentDetailBinding, DetailVie
         arguments?.getString(ID_PLAYER)?.let {
             viewModel.observePlayerByUUID(id = it)
         }
+        initViewModel()
     }
 
     override fun initViewModel() {
         super.initViewModel()
         viewModel.apply {
+            loading.observe(viewLifecycleOwner, Observer {
+                when(it.status) {
+                    Result.Status.LOADING -> {
+                        showLoadingDialog()
+                    }
+                    Result.Status.DISMISS -> {
+                        dismissLoadingDialog()
+                    }
+                }
+            })
+            error.observe(viewLifecycleOwner, Observer {
+                when(it.status) {
+                    Result.Status.ERROR -> {
+                        it.message?.let { message -> snackBar(message) }
+                        dismissLoadingDialog()
+                    }
+                }
+            })
             player.observe(viewLifecycleOwner, Observer {
                 when(it.status) {
                     Result.Status.SUCCESS -> {
                         it.data?.let { player ->  displayPlayer(player) }
                     }
-                    Result.Status.LOADING -> {}
-                    Result.Status.ERROR -> { it.message?.let { message -> snackBar(message) } }
                 }
             })
         }

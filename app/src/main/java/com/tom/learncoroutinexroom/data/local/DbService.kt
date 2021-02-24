@@ -1,37 +1,48 @@
 package com.tom.learncoroutinexroom.data.local
 
-import com.google.gson.Gson
 import com.tom.learncoroutinexroom.data.model.Player
 import io.realm.Realm
-import io.realm.RealmResults
-import timber.log.Timber
 
 
 class DbService : PlayerInterface {
     override fun addOrUpdatePlayer(realm: Realm, player: Player): Boolean {
+        val realm = Realm.getDefaultInstance()
         return try {
-            realm.beginTransaction()
-            realm.copyToRealmOrUpdate(player)
-            realm.commitTransaction()
+            realm.use {
+                it.beginTransaction()
+                it.copyToRealmOrUpdate(player)
+                it.commitTransaction()
+                it.close()
+            }
             true
         } catch (e: Exception) {
             false
         }
     }
 
-    override fun getPlayer(realm: Realm, playerId: String): Player? {
+    override fun getPlayer(playerId: String): Player? {
+        val realm = Realm.getDefaultInstance()
         return try {
-            realm.where(Player::class.java).equalTo("_ID", playerId).findFirst()
+            realm.use {
+                it.copyFromRealm(it.where(Player::class.java).equalTo("id", playerId).findFirst())
+            }
         } catch (e: Exception) {
             null
         }
     }
 
-    override fun saveAll(realm: Realm, players: List<Player>): Boolean {
+    override fun saveAll(players: List<Player>): Boolean {
+        val r = Realm.getDefaultInstance()
+//        val realmList = RealmList<Player>()
+//        realmList.addAll(players)
         return try {
-            realm.beginTransaction()
-            realm.copyToRealmOrUpdate(players)
-            realm.commitTransaction()
+            r.use {
+                it.beginTransaction()
+                it.deleteAll()
+                it.copyToRealmOrUpdate(players)
+                it.commitTransaction()
+                it.close()
+            }
             true
         } catch (e: Exception) {
             false

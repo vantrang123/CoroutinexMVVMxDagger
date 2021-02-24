@@ -18,7 +18,7 @@ class Application : DaggerApplication() {
         super.onCreate()
         Realm.init(this)
         val config = RealmConfiguration.Builder()
-            .name("favorite.realm")
+            .name("player.realm")
             .schemaVersion(1)
             .deleteRealmIfMigrationNeeded()
             .build()
