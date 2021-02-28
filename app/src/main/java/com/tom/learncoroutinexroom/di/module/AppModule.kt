@@ -1,8 +1,9 @@
 package com.tom.learncoroutinexroom.di.module
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.tom.learncoroutinexroom.Application
-import com.tom.learncoroutinexroom.data.PlayerRepository
+import com.tom.learncoroutinexroom.data.repository.PlayerRepository
 import com.tom.learncoroutinexroom.data.local.DbService
 import com.tom.learncoroutinexroom.data.remote.PlayerRemoteDataSource
 import com.tom.learncoroutinexroom.data.remote.Service
@@ -62,4 +63,7 @@ class AppModule {
         realm: Realm,
     ) =
         PlayerRepository(remote = remote, dbService = dbService, realm = realm)
+
+    @Provides
+    fun provideFirebaseAuth() = FirebaseAuth.getInstance()
 }

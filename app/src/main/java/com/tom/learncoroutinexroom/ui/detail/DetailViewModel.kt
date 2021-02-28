@@ -2,11 +2,9 @@ package com.tom.learncoroutinexroom.ui.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tom.learncoroutinexroom.base.BaseViewModel
-import com.tom.learncoroutinexroom.common.Result
-import com.tom.learncoroutinexroom.data.PlayerRepository
+import com.tom.learncoroutinexroom.data.repository.PlayerRepository
 import com.tom.learncoroutinexroom.data.model.Player
 import com.tom.learncoroutinexroom.data.model.error.ErrorMessage
 import kotlinx.coroutines.*
@@ -30,7 +28,6 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch(main) {
             try {
                 isLoading.postValue(true)
-                delay(1_500)
                 val result = async(context = io) {
                     repository.observePlayerByUUID(id = id)
                 }

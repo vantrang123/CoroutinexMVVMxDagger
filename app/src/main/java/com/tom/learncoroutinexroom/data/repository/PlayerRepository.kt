@@ -1,8 +1,6 @@
-package com.tom.learncoroutinexroom.data
+package com.tom.learncoroutinexroom.data.repository
 
-import androidx.lifecycle.LiveData
 import com.tom.learncoroutinexroom.data.local.DbService
-import com.tom.learncoroutinexroom.data.model.Player
 import com.tom.learncoroutinexroom.data.remote.PlayerRemoteDataSource
 import com.tom.learncoroutinexroom.utils.resultLiveData
 import io.realm.Realm
@@ -19,11 +17,13 @@ class PlayerRepository @Inject constructor(
     private val realm: Realm,
     @Named("IO") private val io: CoroutineDispatcher = IO
 ) {
-    fun observePlayer() = resultLiveData(
+    /*fun observePlayer() = resultLiveData(
         networkCall = { remote.getAllPlayers() },
         saveCallResult = { dbService.saveAll(it) },
         io = io
-    )
+    )*/
+
+    suspend fun observerPlayers() = remote.getAllPlayers()
 
     suspend fun observePlayerByUUID(id: String) = dbService.getPlayer(playerId = id)
 }

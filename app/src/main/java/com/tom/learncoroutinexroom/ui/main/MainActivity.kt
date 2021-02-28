@@ -41,30 +41,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             )
 
         binding.adapter = adapter
-        observeUi()
+        initViewModel()
     }
 
-    private fun observeUi() {
-        viewModel.player.observe(this, Observer { result ->
-            when (result.status) {
-                Result.Status.SUCCESS -> {
-                    if (result.data != null) {
-                        adapter.setPlayerList(result.data)
-                    }
-                    binding.recyclerView.visible()
-                    dismissLoadingDialog()
-                }
-
-                Result.Status.ERROR -> {
-                    result.message?.let { message -> snackBar(message) }
-                    binding.recyclerView.visible()
-                    dismissLoadingDialog()
-                }
-                Result.Status.LOADING -> {
-                    showLoadingDialog()
-                }
-            }
-        })
+    override fun initViewModel() {
+        super.initViewModel()
+        viewModel.apply {
+            getListPlayers()
+            players.observe(this@MainActivity, Observer {
+                adapter.setPlayerList(it)
+                binding.recyclerView.visible()
+            })
+        }
     }
 
     override fun getLayoutResourceId(): Int = R.layout.activity_main

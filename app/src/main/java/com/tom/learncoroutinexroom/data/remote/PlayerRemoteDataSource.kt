@@ -4,7 +4,9 @@ import com.tom.learncoroutinexroom.base.BaseDataSource
 import javax.inject.Inject
 
 class PlayerRemoteDataSource @Inject constructor(private val service: Service) : BaseDataSource() {
-    suspend fun getAllPlayers() = getResult {
+/*    suspend fun getAllPlayers() = getResult {
         service.getAllPlayers()
-    }
+    }*/
+
+    suspend fun getAllPlayers() = service.getAllPlayers()
 }

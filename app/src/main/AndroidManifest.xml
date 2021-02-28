@@ -26,6 +26,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -34,9 +35,13 @@
         </activity>
 
 
-        <activity android:name=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:noHistory="false" />
 
-        <activity android:name=".ui.feature.SocialLoginActivity">
+        <activity
+            android:name=".ui.feature.SocialLoginActivity"
+            android:noHistory="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

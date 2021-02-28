@@ -15,7 +15,6 @@ fun <R> resultLiveData(
 ): LiveData<Result<R>> =
         liveData(io) {
             emit(Result.loading<R>())
-            delay(1_500)
 
             val responseStatus = networkCall.invoke()
             if (responseStatus.status == Result.Status.SUCCESS) {

@@ -10,10 +10,10 @@ class LoadingProgress(context: Context) : Dialog(context, R.style.ProgressDialog
     private var countLoading = 0
 
     init {
-        initLoadingProgress(context)
+        initLoadingProgress()
     }
 
-    private fun initLoadingProgress(context: Context) {
+    private fun initLoadingProgress() {
         this.setContentView(R.layout.loading_progress)
         this.setCancelable(false)
         this.setCanceledOnTouchOutside(false)
@@ -38,5 +38,10 @@ class LoadingProgress(context: Context) : Dialog(context, R.style.ProgressDialog
     fun forceDismiss() {
         countLoading = 0
         super.dismiss()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        dismiss()
     }
 }
