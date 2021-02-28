@@ -20,11 +20,7 @@ import javax.inject.Singleton
 class AppModule {
     @Provides
     @Singleton
-    fun provideContext(app: Application): Context = app
-
-    @Provides
-    @Singleton
-    fun provideApplication(app: Application): Application = app
+    fun provideContext(app: Application): Context = app.applicationContext
 
     @Provides
     @Singleton

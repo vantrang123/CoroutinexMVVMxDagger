@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.tom.learncoroutinexroom.di.ViewModelKey
 import com.tom.learncoroutinexroom.di.factory.ViewModelFactory
 import com.tom.learncoroutinexroom.ui.detail.DetailViewModel
+import com.tom.learncoroutinexroom.ui.feature.SocialLoginViewModel
 import com.tom.learncoroutinexroom.ui.main.MainViewModel
 import dagger.Binds
 import dagger.Module
@@ -24,4 +25,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DetailViewModel::class)
     internal abstract fun providesDetailViewModel(viewModel: DetailViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SocialLoginViewModel::class)
+    internal abstract fun providesSocialLoginViewModel(viewModel: SocialLoginViewModel): ViewModel
 }

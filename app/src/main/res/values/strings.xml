@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">LearnCoroutinexRoom</string>
+    <string name="app_name">Base</string>
+    <string name="twitter">Twitter</string>
+    <string name="facebook">Facebook</string>
+    <string name="github">GitHub</string>
+    <string name="google">Google</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.tom.learncoroutinexroom.di.module
 
+import com.tom.learncoroutinexroom.ui.feature.SocialLoginActivity
 import com.tom.learncoroutinexroom.ui.main.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -8,4 +9,7 @@ import dagger.android.ContributesAndroidInjector
 abstract class ActivityBuilder {
     @ContributesAndroidInjector
     abstract fun contributesMainActivity(): MainActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributesSocialLoginActivity(): SocialLoginActivity
 }

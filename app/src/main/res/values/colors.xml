@@ -13,4 +13,11 @@
     <color name="gradient_error_start">#FDD835</color>
     <color name="gradient_error_end">#F57F17</color>
     <color name="light_grey">#E0E0E0</color>
+
+    <!--    Social button colors-->
+    <color name="color_facebook">#4267B2</color>
+    <color name="color_google">#F54436</color>
+    <color name="color_twitter">#38A1F3</color>
+    <color name="color_github">#060914</color>
+
 </resources>

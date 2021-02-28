@@ -4,16 +4,20 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'realm-android'
+    id 'com.google.gms.google-services'
 }
 
 apply from: "../dependencies.gradle"
 
 android {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
 
     defaultConfig {
-        applicationId "com.tom.learncoroutinexroom"
+        applicationId "com.trangdv.phonevertification"
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
@@ -28,6 +32,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "version"
+
+    productFlavors {
+        dev {
+            dimension "version"
+            resValue "string", "facebook_app_id", properties.getProperty("facebookAppId")
+            resValue "string", "fb_login_protocol_scheme", properties.getProperty("fbScheme")
+        }
+
+        staging {
+            dimension "version"
+        }
+
+        prod {
+            dimension "version"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -51,6 +74,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation platform('com.google.firebase:firebase-bom:26.5.0')
 
     implementation koinAndroid
     implementation koinAndroidScope
@@ -74,5 +98,8 @@ dependencies {
     kapt daggerProcessor
     kapt daggerCompiler
     implementation timber
-    implementation picasso
+    implementation firebaseAuth
+    implementation playServicesAuth
+    implementation facebookLogin
+    implementation facebookCore
 }

@@ -11,7 +11,8 @@ ext {
     def paging_version = "1.0.1"
     def dagger_version = "2.31.2"
     def timber_version = "4.7.1"
-    def picasso_version = "2.8"
+    def firebase_version = "19.0.0"
+    def facebook_version = "7.1.0"
 
 
     retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
@@ -48,7 +49,12 @@ ext {
     // timber
     timber = "com.jakewharton.timber:timber:$timber_version"
 
-    // picasso
-    picasso = "com.squareup.picasso:picasso:$picasso_version"
+    // firebase
+    firebaseAuth = "com.google.firebase:firebase-auth-ktx"
+    playServicesAuth =  "com.google.android.gms:play-services-auth:$firebase_version"
+
+    // facebook-login
+    facebookLogin = "com.facebook.android:facebook-login:$facebook_version"
+    facebookCore = "com.facebook.android:facebook-core:$facebook_version"
 
 }
