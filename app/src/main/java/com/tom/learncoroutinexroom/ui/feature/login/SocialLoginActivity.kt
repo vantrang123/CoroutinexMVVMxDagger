@@ -1,4 +1,4 @@
-package com.tom.learncoroutinexroom.ui.feature
+package com.tom.learncoroutinexroom.ui.feature.login
 
 import android.content.Intent
 import androidx.lifecycle.Observer
@@ -61,5 +61,9 @@ class SocialLoginActivity : BaseActivity<ActivitySocialLoginBinding, SocialLogin
     companion object {
         private val facebook_permissions = mutableListOf("email", "public_profile", "user_status")
         const val RC_GOOGLE_SIGN_IN_CODE = 2555
+    }
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
     }
 }

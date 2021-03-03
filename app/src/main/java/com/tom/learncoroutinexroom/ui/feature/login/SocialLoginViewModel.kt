@@ -1,4 +1,4 @@
-package com.tom.learncoroutinexroom.ui.feature
+package com.tom.learncoroutinexroom.ui.feature.login
 
 import android.content.Context
 import android.content.Intent
@@ -11,18 +11,26 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.tom.learncoroutinexroom.base.BaseViewModel
 import com.tom.learncoroutinexroom.common.Result
 import com.tom.learncoroutinexroom.extensions.await
 import com.tom.learncoroutinexroom.extensions.safeApiCall
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 class SocialLoginViewModel @Inject constructor(
         private val context: Context,
-        private val firebaseAuth: FirebaseAuth
+        private val firebaseAuth: FirebaseAuth,
+        @Named("IO") private val io: CoroutineDispatcher,
+        @Named("MAIN") private val main: CoroutineDispatcher
 ) : BaseViewModel() {
 
     private val _isLoginSuccess = MutableLiveData<Boolean>()
@@ -33,8 +41,7 @@ class SocialLoginViewModel @Inject constructor(
     internal val mFacebookCallbackManager = CallbackManager.Factory.create()
     private val mFacebookCallback = object : FacebookCallback<LoginResult> {
         override fun onSuccess(result: LoginResult?) {
-            val credential = FacebookAuthProvider.getCredential(result?.accessToken?.token!!)
-            handleFacebookCredential(credential)
+            _isLoginSuccess.postValue(result?.accessToken != null)
         }
 
         override fun onCancel() {
@@ -51,17 +58,6 @@ class SocialLoginViewModel @Inject constructor(
         faceBookLoginManager.registerCallback(mFacebookCallbackManager, mFacebookCallback)
     }
 
-    private fun handleFacebookCredential(authCredential: AuthCredential) {
-        viewModelScope.launch {
-            safeApiCall { Result.success(signInWithCredential(authCredential)!!) }.also {
-                if (it.status == Result.Status.SUCCESS && it.data?.user != null) {
-                    _isLoginSuccess.postValue(true)
-                }
-                _isLoginSuccess.postValue(true)
-            }
-        }
-    }
-
     // google
     private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -75,22 +71,10 @@ class SocialLoginViewModel @Inject constructor(
 
     fun handleGoogleSignInResult(data: Intent) {
         viewModelScope.launch {
-            safeApiCall {
-                val account = GoogleSignIn.getSignedInAccountFromIntent(data).await()
-                val authResult =
-                        signInWithCredential(GoogleAuthProvider.getCredential(account.idToken, null))!!
-                Result.success(authResult)
-            }.also {
-                if (it.status == Result.Status.SUCCESS && it.data?.user != null) {
-                    _isLoginSuccess.postValue(true)
-                }
-                _isLoginSuccess.postValue(true)
+            val result = async(context = io) {
+                GoogleSignIn.getSignedInAccountFromIntent(data)
             }
+            _isLoginSuccess.postValue(result.await().getResult(ApiException::class.java) != null)
         }
-    }
-
-    @Throws(Exception::class)
-    private suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult? {
-        return firebaseAuth.signInWithCredential(authCredential).await()
     }
 }

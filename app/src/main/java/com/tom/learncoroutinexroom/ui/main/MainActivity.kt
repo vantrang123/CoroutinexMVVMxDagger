@@ -64,4 +64,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         detailFragment.arguments = args
         detailFragment.show(supportFragmentManager, "DetailDialogFragment")
     }
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+    }
 }
